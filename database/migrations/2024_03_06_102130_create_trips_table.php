@@ -13,17 +13,21 @@ return new class extends Migration
     {
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from_location_id');
-            $table->foreignId('to_location_id');
-            $table->timestamp('from_date');
-            $table->timestamp('to_date');
-            $table->integer('adults');
-            $table->integer('children');
-            $table->integer('amount');
-            $table->string('flight');
-            $table->string('name');
-            $table->string('phone');
-            $table->foreignId('voucher_id');
+            $table->string('url')->nullable();
+            $table->foreignId('location_id')->nullable();
+            $table->date('from_date')->nullable();
+            $table->time('from_time')->nullable();
+            $table->integer('status')->nullable();
+            $table->boolean('paid')->nullable();
+            $table->integer('adults')->nullable();
+            $table->integer('children')->nullable();
+            $table->integer('luggages')->nullable();
+            $table->integer('amount')->nullable();
+            $table->string('name')->nullable();
+            $table->string('phone')->nullable();
+            $table->text('notes')->nullable();
+            $table->foreignId('voucher_id')->nullable();
+            $table->timestamps();
         });
     }
 

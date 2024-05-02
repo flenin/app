@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'booking.fill.title' => 'Réserver un trajet',
+    'booking.fill.description' => 'Remplissez le formulaire ci-dessous.',
+    'booking.checkout.title' => 'Récapitulatif du trajet',
+    'booking.checkout.description' => 'Vérifiez les informations renseignées.',
+    'booking.confirmed.title' => 'Réservation confirmée',
+    'booking.confirmed.description' => 'Vous serez contacté par notre service clientèle afin de planifier votre trajet.',
+    'back.to.home' => 'Retour à la page d\'accueil',
+    'select' => 'Sélectionner',
+    'from' => 'Départ',
+    'to' => 'Arrivée',
+    'date' => 'Date',
+    'time' => 'Heure',
+    'adults' => 'Adultes',
+    'children' => 'Enfants (0-9 ans)',
+    'luggages' => 'Bagages (de plus de 10 kg)',
+    'firstname' => 'Votre prénom',
+    'mobile' => 'Téléphone mobile',
+    'voucher' => 'Code promo',
+    'step.next' => 'Suivant',
+    'step.back' => 'Précédent',
+    'booking.confirm' => 'Confirmer ma réservation',
+    'booking.cancel' => 'Annuler la réservation',
+];

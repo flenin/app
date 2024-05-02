@@ -1,7 +1,14 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\WelcomeController;
+
+use App\Http\Middleware\SetLocale;
+use App\Http\Middleware\EnsureTripIsNotPaid;
+
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +21,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware([SetLocale::class])->group(function () {
+    Route::get('/', [WelcomeController::class, 'show'])->name('welcome');
+
+    Route::get('/booking', [BookingController::class, 'show'])->name('booking');
+    Route::post('/booking', [BookingController::class, 'store']);
+
+    Route::get('/booking/{trip:url}', [BookingController::class, 'stripe'])
+        ->name('booking.stripe')
+        ->middleware(EnsureTripIsNotPaid::class);
+
+    Route::get('/booking/{trip:url}/{session_id}/success', [BookingController::class, 'success'])->name('booking.success');
+
+    Route::get('/{lang}', [LocaleController::class, 'store'])
+        ->where('lang', 'fr|en');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';

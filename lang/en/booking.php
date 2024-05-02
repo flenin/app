@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'booking.fill.title' => 'Book a trip',
+    'booking.fill.description' => 'Fill the form below.',
+    'booking.checkout.title' => 'Trip summary',
+    'booking.checkout.description' => 'Check your data.',
+    'booking.confirmed.title' => 'Confirmed reservation',
+    'booking.confirmed.description' => 'You will be contacted by our customer service to plan your trip.',
+    'back.to.home' => 'Back to home page',
+    'select' => 'Choose',
+    'from' => 'From',
+    'to' => 'To',
+    'date' => 'Date',
+    'time' => 'Time',
+    'adults' => 'Adults',
+    'children' => 'Children (0-9 years)',
+    'luggages' => 'Luggages (more than 10 kg)',
+    'firstname' => 'Your first name',
+    'mobile' => 'Mobile number',
+    'voucher' => 'Discount code',
+    'step.next' => 'Next',
+    'step.back' => 'Previous',
+    'booking.confirm' => 'Confirm my booking',
+    'booking.cancel' => 'Cancel booking',
+];
