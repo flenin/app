@@ -179,6 +179,7 @@ return [
         ],
         'from_date' => [
             'required_if' => 'Select departure date',
+            'date_format' => 'Select departure date',
         ],
         'from_time' => [
             'required_if' => 'Select departure time',
@@ -188,6 +189,8 @@ return [
             'required_if' => 'Select the number of adults',
             'integer' => 'Select the number of adults',
             'between' => 'Select the number of adults',
+            'min' => 'Select the number of adults',
+            'max' => 'Select up to 7 people maximum',
         ],
         'children' => [
             'required_if' => 'Select the number of children',

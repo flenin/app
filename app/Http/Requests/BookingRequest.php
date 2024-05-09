@@ -22,7 +22,7 @@ class BookingRequest extends FormRequest
             'adults' => 'required_if:step,0,3|integer|between:0,10',
             'children' => 'required_if:step,0,3|integer|between:0,10',
             'voucher' => 'nullable|exists:vouchers,code',
-            'from_date' => 'required_if:step,1,3', // |date_format:Y-m-d
+            'from_date' => 'required_if:step,1,3|date_format:Y-m-d',
             'from_time' => 'required_if:step,2,3|date_format:H:i',
             'luggages' => 'required_if:step,2,3|integer|between:0,10',
             'name' => 'required_if:step,2,3|max:20',
@@ -37,14 +37,14 @@ class BookingRequest extends FormRequest
                 if (($this->adults + $this->children) === 0) {
                     $validator->errors()->add(
                         'adults',
-                        'La réservation ne peut être effectuée pour 0 personne.'
+                        __('validation.custom.adults.min')
                     );
                 }
 
                 if (($this->adults + $this->children) > 7) {
                     $validator->errors()->add(
                         'adults',
-                        'La réservation ne peut être effectuée que pour 7 personnes max.'
+                        __('validation.custom.adults.max')
                     );
                 }
             }

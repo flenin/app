@@ -22,5 +22,4 @@ return [
     'step.next' => 'Next',
     'step.back' => 'Previous',
     'booking.confirm' => 'Confirm my booking',
-    'booking.cancel' => 'Cancel booking',
 ];

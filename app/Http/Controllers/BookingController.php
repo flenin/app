@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -17,35 +16,25 @@ use App\Models\Location;
 use App\Http\Requests\BookingRequest;
 use App\Http\Resources\TripResource;
 
-use Carbon\Carbon;
 use Stripe\StripeClient;
-
-use Carbon\CarbonPeriod;
 
 class BookingController extends Controller
 {
-    public function show(Request $request): View
-    {
-        return view('booking', [
-            'trans' => collect(Lang::get('booking'))->toJson(),
-            'times' => collect(CarbonPeriod::since('00:00')->minutes(15)->until('23:45'))->map(function (Carbon $date) {
-                return $date->format('H:i');
-            }),
-        ]);
-    }
-
     public function store(BookingRequest $request): mixed
     {
-        $validated = $request->validated();
+        $trip = $request->session()->get('tripId');
 
-        if ($request->session()->has('tripId')) {
-            $trip = Trip::findOrFail($request->session()->get('tripId'));
-        } else {
-            $trip = new Trip();
-            $trip->save();
+        if ($trip !== null) {
+            $trip = Trip::find($trip);
+        }
+
+        if ($trip === null) {
+            $trip = Trip::create();
 
             $request->session()->put('tripId', $trip->id);
         }
+
+        $validated = $request->validated();
 
         $trip->fill($validated);
 
@@ -161,7 +150,7 @@ class BookingController extends Controller
         ]],
             'mode' => 'payment',
             'success_url' => Str::replace('CHECKOUT_SESSION_ID', '{CHECKOUT_SESSION_ID}', route('booking.success', ['trip' => $trip, 'session_id' => 'CHECKOUT_SESSION_ID'])),
-            'cancel_url' => route('booking'), // TODO
+            'cancel_url' => route('welcome'), // TODO
         ]);
 
         return redirect()->away($checkout_session->url);
@@ -178,10 +167,10 @@ class BookingController extends Controller
 
             $trip->save();
 
-            return view('booking', [
+            return view('welcome', [
             ]);
         } catch (Error $e) {
-            return view('booking', [
+            return view('welcome', [
             ]);
         }
     }

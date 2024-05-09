@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\App;
 Route::middleware([SetLocale::class])->group(function () {
     Route::get('/', [WelcomeController::class, 'show'])->name('welcome');
 
-    Route::get('/booking', [BookingController::class, 'show'])->name('booking');
     Route::post('/booking', [BookingController::class, 'store']);
 
     Route::get('/booking/{trip:url}', [BookingController::class, 'stripe'])

@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.app-bg {
+    background-image: url(../images/pexels-yovanverma-2082103.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}

@@ -8,7 +8,7 @@ export default function Booking(props) {
     const form = useRef();
 
     const [times, setTimes] = useState(JSON.parse(props.times));
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState({});
     const [voucher, setVoucher] = useState(false);
     const [booking, setBooking] = useState({});
     const [validated, setValidated] = useState({});
@@ -31,14 +31,14 @@ export default function Booking(props) {
     const [currentStep, setCurrentStep] = useState(0);
 
     const goToNextStep = () => {
-        setErrors([]);
+        setErrors({});
         setCurrentStep(currentStep + 1);
     }
 
     const goToPreviousStep = (e) => {
         e.preventDefault();
 
-        setErrors([]);
+        setErrors({});
         setCurrentStep(currentStep - 1);
     }
 
@@ -53,7 +53,9 @@ export default function Booking(props) {
     const from_location_autocomplete_input = useRef();
     const to_location_autocomplete_input = useRef();
 
-    useEffect(() => {
+    const initMap = () => {
+        const google = window.google;
+
         const options = {
             componentRestrictions: {
                 country: 'fr',
@@ -81,6 +83,14 @@ export default function Booking(props) {
             handleChange({name: 'to_location', value: place.place_id});
             handleChange({name: 'to_location_autocomplete_input', value: place.name});
         });
+    };
+
+    useEffect(() => {
+        initMap();
+    }, []);
+
+    useEffect(() => {
+        initMap();
     }, [currentStep]);
 
 
@@ -128,13 +138,7 @@ export default function Booking(props) {
                 goToNextStep();
             })
             .catch((error) => {
-                let messages = [];
-
-                for (let message in error.response.data.errors) {
-                    messages = [...messages, error.response.data.errors[message][0]];
-                }
-
-                setErrors(messages);
+                setErrors(error.response.data.errors);
             })
             .finally(() => {
                 window.scrollTo(0, 0);
@@ -171,52 +175,51 @@ export default function Booking(props) {
                     </ol>
                 </nav>
             </div> */}
-            <form method="post" className="mt-20" autoComplete="off" ref={form} onSubmit={handleSubmit}>
+            <form method="post" autoComplete="off" ref={form} onSubmit={handleSubmit}>
                 <input type="hidden" name="step" value={currentStep} />
                 <div className="grid gap-x-6 gap-y-8">
-                    {errors.length ? (
-                        <div className="col-span-full text-sm leading-6">
-                            <div className="bg-red-50 rounded-lg p-6 text-red-900">
-                                <ul>
-                                    {errors.map((v, i) => <li key={i}>{v}</li>)}
-                                </ul>
-                            </div>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
                     {currentStep === 0 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
-                            <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.fill.description']}</p>
+                            {/* <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.fill.description']}</p> */}
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['from']}</label>
                                     <input
                                         type="text"
                                         name="from_location_autocomplete_input"
-                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.from_location_autocomplete_input}
                                         onChange={handleChange}
                                         ref={from_location_autocomplete_input}
                                     />
+                                    {errors.from_location ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.from_location}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['to']}</label>
                                     <input
                                         type="text"
                                         name="to_location_autocomplete_input"
-                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.to_location_autocomplete_input}
                                         onChange={handleChange}
                                         ref={to_location_autocomplete_input}
                                     />
+                                    {errors.to_location ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.to_location}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['adults']}</label>
                                     <select
                                         name="adults"
-                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
                                         value={booking.adults}
                                         onChange={handleChange}
                                     >
@@ -228,16 +231,18 @@ export default function Booking(props) {
                                         <option>5</option>
                                         <option>6</option>
                                         <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
                                     </select>
+                                    {errors.adults ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.adults}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['children']}</label>
                                     <select
                                         name="children"
-                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
                                         value={booking.children}
                                         onChange={handleChange}
                                     >
@@ -249,10 +254,12 @@ export default function Booking(props) {
                                         <option>5</option>
                                         <option>6</option>
                                         <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
                                     </select>
+                                    {errors.children ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.children}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div className="col-span-full">
                                     {!voucher ?
@@ -273,10 +280,15 @@ export default function Booking(props) {
                                             <input
                                                 type="text"
                                                 name="voucher"
-                                                className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                                className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                                 value={booking.voucher}
                                                 onChange={handleChange}
                                             />
+                                            {errors.voucher ? (
+                                                <p className="mt-2 text-sm text-red-600">{errors.voucher}</p>
+                                            ) : (
+                                                <></>
+                                            )}
                                         </>
                                     }
                                 </div>
@@ -288,12 +300,16 @@ export default function Booking(props) {
                     {currentStep === 1 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
-                            <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.fill.description']}</p>
                             <div>
                                 <Calendar
                                     value={booking.from_date}
                                     onChange={handleChange}
                                 />
+                                {errors.from_date ? (
+                                    <p className="mt-2 text-sm text-red-600">{errors.from_date}</p>
+                                ) : (
+                                    <></>
+                                )}
                             </div>
                         </>
                     ) : (
@@ -302,7 +318,6 @@ export default function Booking(props) {
                     {currentStep === 2 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
-                            <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.fill.description']}</p>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['time']}</label>
@@ -315,6 +330,11 @@ export default function Booking(props) {
                                         <option disabled selected>{trans['select']}</option>
                                         {times.map((v, i) => <option key={i}>{v}</option>)}
                                     </select>
+                                    {errors.from_time ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.from_time}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['luggages']}</label>
@@ -336,6 +356,11 @@ export default function Booking(props) {
                                         <option>9</option>
                                         <option>10</option>
                                     </select>
+                                    {errors.luggages ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.luggages}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['firstname']}</label>
@@ -346,6 +371,11 @@ export default function Booking(props) {
                                         value={booking.name}
                                         onChange={handleChange}
                                     />
+                                    {errors.name ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.name}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                                 <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['mobile']}</label>
@@ -357,6 +387,11 @@ export default function Booking(props) {
                                         onChange={handleChange}
                                         placeholder="+33"
                                     />
+                                    {errors.phone ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.phone}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                             </div>
                         </>
@@ -366,7 +401,6 @@ export default function Booking(props) {
                     {currentStep === 3 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.checkout.title']}</h2>
-                            <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.checkout.description']}</p>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from']}</label>
@@ -426,7 +460,9 @@ export default function Booking(props) {
                                     className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
                                     variant="solid"
                                     color="white"
-                                >Payer</a>
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >Payer maintenant</a>
                             </div>
                             <div>
                                 <a
@@ -443,7 +479,7 @@ export default function Booking(props) {
 
                     {currentStep < 4 ?
                         <>
-                            {currentStep > 0 && validated.data && validated.data.amount ? (
+                            {/* {currentStep > 0 && validated.data && validated.data.amount ? (
                                 <div className="col-span-full">
                                     <dl className="mt-10 text-sm font-medium text-gray-500 space-y-6">
                                         <div className="flex justify-between">
@@ -468,7 +504,7 @@ export default function Booking(props) {
                                 </div>
                             ) : (
                                 <></>
-                            )}
+                            )} */}
                             <div>
                                 <button
                                     className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
@@ -500,14 +536,7 @@ export default function Booking(props) {
                                     >{trans['step.back']}</a>
                                 </div>
                             :
-                                <div>
-                                    <a
-                                        href="/"
-                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-slate-900 active:text-slate-600 focus-visible:outline-white w-full"
-                                        variant="solid"
-                                        color="white"
-                                    >{trans['booking.cancel']}</a>
-                                </div>
+                                <></>
                             }
                         </>
                     :

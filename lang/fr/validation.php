@@ -11,6 +11,7 @@ return [
         ],
         'from_date' => [
             'required_if' => 'Sélectionnez la date de départ',
+            'date_format' => 'Sélectionnez la date de départ',
         ],
         'from_time' => [
             'required_if' => 'Sélectionnez l\'heure de départ',
@@ -20,6 +21,8 @@ return [
             'required_if' => 'Sélectionnez le nombre d\'adultes',
             'integer' => 'Sélectionnez le nombre d\'adultes',
             'between' => 'Sélectionnez le nombre d\'adultes',
+            'min' => 'Sélectionnez le nombre d\'adultes',
+            'max' => 'Sélectionnez jusqu\'à 7 personnes maximum',
         ],
         'children' => [
             'required_if' => 'Sélectionnez le nombre d\'enfants',
