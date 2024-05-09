@@ -11,7 +11,7 @@
         <link href="https://fonts.bunny.net/css?family=inter:400,600&display=swap" rel="stylesheet" />
         <link href="https://fonts.bunny.net/css?family=lexend:400,600&display=swap" rel="stylesheet" />
 
-        <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA52bbn4yHE2fKCnpUiCVQSHaPYQHmvwmI&libraries=places&callback=initMap"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA52bbn4yHE2fKCnpUiCVQSHaPYQHmvwmI&libraries=places&callback=initMap"></script>
 
         <!-- Styles -->
         @viteReactRefresh
