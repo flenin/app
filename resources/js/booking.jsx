@@ -9,7 +9,6 @@ export default function Booking(props) {
 
     const [times, setTimes] = useState(JSON.parse(props.times));
     const [errors, setErrors] = useState({});
-    const [voucher, setVoucher] = useState(false);
     const [booking, setBooking] = useState({});
     const [validated, setValidated] = useState({});
     const submit = useRef();
@@ -56,7 +55,19 @@ export default function Booking(props) {
     const initMap = () => {
         const google = window.google;
 
+        const center = {
+            lat: 48.8589384,
+            lng: 2.2646341,
+        };
+
         const options = {
+            bounds: {
+                north: center.lat + 1,
+                south: center.lat - 1,
+                east: center.lng + 1,
+                west: center.lng - 1,
+            },
+            // strictBounds: true,
             componentRestrictions: {
                 country: 'fr',
             },
@@ -103,7 +114,7 @@ export default function Booking(props) {
         const values = Object.fromEntries(formData.entries());
 
         setBooking({...booking, ...values});
-    }, [currentStep, voucher]);
+    }, [currentStep]);
 
     const handleChange = (e) => {
         const name = e.name || e.target.name;
@@ -126,9 +137,8 @@ export default function Booking(props) {
         e.preventDefault();
 
         const button = submit.current;
-        const label = button.querySelector('span').innerHTML;
 
-        button.querySelector('span').innerHTML = '';
+        button.querySelector('span').classList.add('hidden');
         button.querySelector('svg').classList.remove('hidden');
 
         const fetch = await axios.post('/booking', booking)
@@ -143,7 +153,7 @@ export default function Booking(props) {
             .finally(() => {
                 window.scrollTo(0, 0);
 
-                button.querySelector('span').innerHTML = label;
+                button.querySelector('span').classList.remove('hidden');
                 button.querySelector('svg').classList.add('hidden');
             });
     }
@@ -190,6 +200,7 @@ export default function Booking(props) {
                                         name="from_location_autocomplete_input"
                                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.from_location_autocomplete_input}
+                                        placeholder={trans['enter.location']}
                                         onChange={handleChange}
                                         ref={from_location_autocomplete_input}
                                     />
@@ -206,6 +217,7 @@ export default function Booking(props) {
                                         name="to_location_autocomplete_input"
                                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.to_location_autocomplete_input}
+                                        placeholder={trans['enter.location']}
                                         onChange={handleChange}
                                         ref={to_location_autocomplete_input}
                                     />
@@ -262,35 +274,19 @@ export default function Booking(props) {
                                     )}
                                 </div>
                                 <div className="col-span-full">
-                                    {!voucher ?
-                                        <>
-                                            <a
-                                                href=""
-                                                className="text-sm text-blue-600 underline hover:no-underline"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-
-                                                    setVoucher(true);
-                                                }}
-                                            >Utiliser un code promo</a>
-                                        </>
-                                    :
-                                        <>
-                                            <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['voucher']}</label>
-                                            <input
-                                                type="text"
-                                                name="voucher"
-                                                className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
-                                                value={booking.voucher}
-                                                onChange={handleChange}
-                                            />
-                                            {errors.voucher ? (
-                                                <p className="mt-2 text-sm text-red-600">{errors.voucher}</p>
-                                            ) : (
-                                                <></>
-                                            )}
-                                        </>
-                                    }
+                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['voucher']}</label>
+                                    <input
+                                        type="text"
+                                        name="voucher"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                        value={booking.voucher}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.voucher ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.voucher}</p>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                             </div>
                         </>
@@ -298,6 +294,57 @@ export default function Booking(props) {
                         <></>
                     )}
                     {currentStep === 1 ? (
+                        <>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                                {validated.data && validated.data.location ? (
+                                    <>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from']}</label>
+                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.from_address}</span>
+                                        </div>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['to']}</label>
+                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.to_address}</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {validated.data && validated.data.amount ? (
+                                    <>
+                                        <div className="col-span-full">
+                                            <dl className="mt-10 text-sm font-medium text-gray-500 space-y-6">
+                                                <div className="flex justify-between">
+                                                    <dt>Sous-total</dt>
+                                                    <dd className="text-gray-900">{validated.data.amount}</dd>
+                                                </div>
+                                                {validated.data.voucher ? (
+                                                    <>
+                                                        <div className="flex justify-between">
+                                                            <dt className="flex">Code promo<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
+                                                            <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                                <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
+                                                    <dt>Total</dt>
+                                                    <dd>{validated.data.amountWithVoucher}</dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {currentStep === 2 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
                             <div>
@@ -315,7 +362,7 @@ export default function Booking(props) {
                     ) : (
                         <></>
                     )}
-                    {currentStep === 2 ? (
+                    {currentStep === 3 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
@@ -398,7 +445,7 @@ export default function Booking(props) {
                     ) : (
                         <></>
                     )}
-                    {currentStep === 3 ? (
+                    {currentStep === 4 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.checkout.title']}</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
@@ -444,7 +491,7 @@ export default function Booking(props) {
                     ) : (
                         <></>
                     )}
-                    {currentStep === 4 ? (
+                    {currentStep === 5 ? (
                         <>
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.confirmed.title']}</h2>
                             <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.confirmed.description']}</p>
@@ -477,34 +524,24 @@ export default function Booking(props) {
                         <></>
                     )}
 
-                    {currentStep < 4 ?
+                    {currentStep < 5 ?
                         <>
-                            {/* {currentStep > 0 && validated.data && validated.data.amount ? (
-                                <div className="col-span-full">
-                                    <dl className="mt-10 text-sm font-medium text-gray-500 space-y-6">
-                                        <div className="flex justify-between">
-                                            <dt>Sous-total</dt>
-                                            <dd className="text-gray-900">{validated.data.amount}</dd>
-                                        </div>
-                                        {validated.data.voucher ? (
-                                            <>
-                                                <div className="flex justify-between">
-                                                    <dt className="flex">Code promo<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
-                                                    <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <></>
-                                        )}
-                                        <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-                                            <dt>Total</dt>
-                                            <dd>{validated.data.amountWithVoucher}</dd>
-                                        </div>
-                                    </dl>
+                            {currentStep === 0 ?
+                                <div>
+                                    <button
+                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
+                                        type="submit"
+                                        variant="solid"
+                                        color="blue"
+                                    >
+                                        <span>
+                                            {trans['step.price']}
+                                        </span>
+                                    </button>
                                 </div>
-                            ) : (
+                            :
                                 <></>
-                            )} */}
+                            }
                             <div>
                                 <button
                                     className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
@@ -517,11 +554,17 @@ export default function Booking(props) {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                     </svg>
                                     <span>
-                                        {currentStep === 3 ?
+                                        {currentStep === 4 ? (
                                             trans['booking.confirm']
-                                        :
-                                            trans['step.next']
-                                        }
+                                        ) : (
+                                            <>
+                                                {currentStep === 0 ? (
+                                                    trans['book']
+                                                ) : (
+                                                    trans['step.next']
+                                                )}
+                                            </>
+                                        )}
                                     </span>
                                 </button>
                             </div>

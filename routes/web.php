@@ -26,12 +26,13 @@ Route::middleware([SetLocale::class])->group(function () {
 
     Route::post('/booking', [BookingController::class, 'store']);
 
-    Route::get('/booking/{trip:url}', [BookingController::class, 'stripe'])
-        ->name('booking.stripe')
-        ->middleware(EnsureTripIsNotPaid::class);
+    Route::middleware([EnsureTripIsNotPaid::class])->group(function () {
+        Route::get('/booking/{trip:url}', [BookingController::class, 'stripe'])->name('booking.stripe');
+        Route::get('/booking/{trip:url}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');
+        Route::get('/booking/{trip:url}/{session_id}/success', [BookingController::class, 'success'])->name('booking.success');
+    });
 
-    Route::get('/booking/{trip:url}/{session_id}/success', [BookingController::class, 'success'])->name('booking.success');
+    Route::get('/{lang}', [LocaleController::class, 'store'])->where('lang', 'fr|en');
 
-    Route::get('/{lang}', [LocaleController::class, 'store'])
-        ->where('lang', 'fr|en');
+    Route::get('/.well-known/apple-developer-merchantid-domain-association', [WelcomeController::class, 'apple']);
 });

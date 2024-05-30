@@ -159,6 +159,8 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\MobileServiceProvider::class,
+        App\Providers\MapServiceProvider::class,
 
         /*
          * Application Service Providers...

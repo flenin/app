@@ -19,7 +19,10 @@ return [
     'firstname' => 'Your first name',
     'mobile' => 'Mobile number',
     'voucher' => 'Discount code',
+    'step.price' => 'Calculate the trip price',
     'step.next' => 'Next',
     'step.back' => 'Previous',
     'booking.confirm' => 'Confirm my booking',
+    'book' => 'Book',
+    'enter.location' => 'Enter a location',
 ];

@@ -19,7 +19,10 @@ return [
     'firstname' => 'Votre prénom',
     'mobile' => 'Téléphone mobile',
     'voucher' => 'Code promo',
+    'step.price' => 'Calculer le prix du trajet',
     'step.next' => 'Suivant',
     'step.back' => 'Précédent',
     'booking.confirm' => 'Confirmer ma réservation',
+    'book' => 'Réserver',
+    'enter.location' => 'Indiquer un lieu',
 ];

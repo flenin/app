@@ -21,4 +21,9 @@ class WelcomeController extends Controller
             }),
         ]);
     }
+
+    public function apple()
+    {
+        return response()->file('apple-developer-merchantid-domain-association');
+    }
 }

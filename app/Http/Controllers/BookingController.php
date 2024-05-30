@@ -15,7 +15,9 @@ use App\Models\Voucher;
 use App\Models\Location;
 use App\Http\Requests\BookingRequest;
 use App\Http\Resources\TripResource;
-
+use App\Facades\Mobile;
+use App\Facades\Map;
+use Illuminate\Validation\ValidationException;
 use Stripe\StripeClient;
 
 class BookingController extends Controller
@@ -38,21 +40,11 @@ class BookingController extends Controller
 
         $trip->fill($validated);
 
-        if ($validated['step'] < 3) {
+        if ($validated['step'] < 4) {
             switch ($validated['step']) {
                 case '0':
                     $json = Cache::rememberForever(sha1($validated['from_location']).sha1($validated['to_location']), function () use ($validated) {
-                        $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json?parameters', [
-                            'origins' => 'place_id:'.$validated['from_location'],
-                            'destinations' => 'place_id:'.$validated['to_location'],
-                            'key' => env('GOOGLE_API_KEY'),
-                        ]);
-
-                        if ($response->ok()) {
-                            return $response->json();
-                        }
-
-                        return false;
+                        return Map::distance($validated['from_location'], $validated['to_location']);
                     });
 
                     if ($json !== false) {
@@ -85,10 +77,6 @@ class BookingController extends Controller
                         }
                     }
 
-                    if ($location->isDirty()) {
-                        // TODO : Throw error
-                    }
-
                     if (!empty($validated['voucher'])) {
                         $voucher = Voucher::where('code', $validated['voucher'])->first();
 
@@ -101,13 +89,26 @@ class BookingController extends Controller
                         }
                     }
 
+                    if (
+                        empty($location)
+                        || (($location->distance / 1000) > 300)
+                    ) {
+                        throw ValidationException::withMessages([
+                            'from_location' => 'Impossible deffectuer cette course 1',
+                        ]);
+                    }
+
                     $trip->amount = ceil($location->distance / 1000 * 1.77);
+
+                    if ($trip->amountWithVoucher < 10) {
+                        throw ValidationException::withMessages([
+                            'from_location' => 'Impossible deffectuer cette course 2',
+                        ]);
+                    }
 
                     if (($validated['adults'] + $validated['children']) > 4) {
                         $trip->amount += 20;
                     }
-
-                    // if amount == 0 : exit
 
                     break;
             }
@@ -124,6 +125,8 @@ class BookingController extends Controller
         $trip->url = $url;
 
         $trip->save();
+
+        Mobile::notify("New trip {$url}");
 
         $request->session()->forget('tripId');
 
@@ -150,13 +153,13 @@ class BookingController extends Controller
         ]],
             'mode' => 'payment',
             'success_url' => Str::replace('CHECKOUT_SESSION_ID', '{CHECKOUT_SESSION_ID}', route('booking.success', ['trip' => $trip, 'session_id' => 'CHECKOUT_SESSION_ID'])),
-            'cancel_url' => route('welcome'), // TODO
+            'cancel_url' => route('booking.cancel', ['trip' => $trip]),
         ]);
 
         return redirect()->away($checkout_session->url);
     }
 
-    public function success(Request $request, Trip $trip, $session_id): View
+    public function success(Request $request, Trip $trip, $session_id): mixed
     {
         $stripe = new StripeClient(env('STRIPE_API_KEY'));
 
@@ -167,11 +170,16 @@ class BookingController extends Controller
 
             $trip->save();
 
-            return view('welcome', [
-            ]);
+            Mobile::notify("Paid {$trip->url}");
+
+            return view('success');
         } catch (Error $e) {
-            return view('welcome', [
-            ]);
+            return redirect()->route('booking.cancel', ['trip' => $trip]);
         }
+    }
+
+    public function cancel(Request $request, Trip $trip): View
+    {
+        return view('cancel');
     }
 }
