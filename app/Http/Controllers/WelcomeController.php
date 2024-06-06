@@ -26,9 +26,4 @@ class WelcomeController extends Controller
     {
         return view('terms');
     }
-
-    public function apple()
-    {
-        return response()->file('apple-developer-merchantid-domain-association');
-    }
 }

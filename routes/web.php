@@ -35,6 +35,4 @@ Route::middleware([SetLocale::class])->group(function () {
     });
 
     Route::get('/{lang}', [LocaleController::class, 'store'])->where('lang', 'fr|en');
-
-    Route::get('/.well-known/apple-developer-merchantid-domain-association', [WelcomeController::class, 'apple']);
 });
