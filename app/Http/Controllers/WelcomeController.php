@@ -22,6 +22,11 @@ class WelcomeController extends Controller
         ]);
     }
 
+    public function terms(Request $request): View
+    {
+        return view('terms');
+    }
+
     public function apple()
     {
         return response()->file('apple-developer-merchantid-domain-association');

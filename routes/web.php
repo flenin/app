@@ -26,6 +26,8 @@ Route::middleware([SetLocale::class])->group(function () {
 
     Route::post('/booking', [BookingController::class, 'store']);
 
+    Route::get('/terms', [WelcomeController::class, 'terms'])->name('terms');
+
     Route::middleware([EnsureTripIsNotPaid::class])->group(function () {
         Route::get('/booking/{trip:url}', [BookingController::class, 'stripe'])->name('booking.stripe');
         Route::get('/booking/{trip:url}/cancel', [BookingController::class, 'cancel'])->name('booking.cancel');

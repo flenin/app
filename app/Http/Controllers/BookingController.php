@@ -98,7 +98,7 @@ class BookingController extends Controller
                         ]);
                     }
 
-                    $trip->amount = ceil($location->distance / 1000 * 1.77);
+                    $trip->amount = ceil($location->distance / 1000 * env('COST_PER_KILOMETER'));
 
                     if ($trip->amountWithVoucher < 10) {
                         throw ValidationException::withMessages([
@@ -120,6 +120,7 @@ class BookingController extends Controller
 
         do {
             $url = Str::random(5);
+            $url = Str::of($url)->lower();
         } while (DB::table('trips')->where('url', $url)->exists());
 
         $trip->url = $url;

@@ -2,10 +2,11 @@
 
 return [
     'booking.fill.title' => 'Réserver un trajet',
-    'booking.fill.description' => 'Remplissez le formulaire ci-dessous.',
+    'booking.price.title' => 'Estimation du prix du trajet',
+    'booking.date.title' => 'Date du trajet',
+    'booking.contact.title' => 'Détails du trajet',
     'booking.checkout.title' => 'Récapitulatif du trajet',
-    'booking.checkout.description' => 'Vérifiez les informations renseignées.',
-    'booking.confirmed.title' => 'Réservation confirmée',
+    'booking.confirmed.title' => 'Réservation effectuée',
     'booking.confirmed.description' => 'Vous serez contacté par notre service clientèle afin de planifier votre trajet.',
     'back.to.home' => 'Retour à la page d\'accueil',
     'select' => 'Sélectionner',
@@ -25,4 +26,17 @@ return [
     'booking.confirm' => 'Confirmer ma réservation',
     'book' => 'Réserver',
     'enter.location' => 'Indiquer un lieu',
+    'subtotal' => 'Sous-total',
+    'total' => 'Total',
+    'pay.now' => 'Payer maintenant',
+    'pay.later' => 'Payer plus tard',
+    'discount.paris24' => '-10€ avec le code PARIS24',
+
+    'payment.cancelled.title' => 'Paiement annulé.',
+    'payment.cancelled.text1' => 'Nous vous confirmons que votre paiement a été annulé avec succès. Aucun montant n\'a été débité de votre compte.',
+    'payment.cancelled.text2' => 'Si vous avez des questions supplémentaires ou besoin d\'assistance, n\'hésitez pas à contacter notre service clientèle.',
+
+    'payment.validated.title' => 'Paiement validé.',
+    'payment.validated.text1' => 'Nous avons le plaisir de vous informer que votre paiement a été validé avec succès.',
+    'payment.validated.text2' => 'Notre service clientèle vous contactera prochainement pour organiser votre trajet.',
 ];

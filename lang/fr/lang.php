@@ -9,16 +9,25 @@ return [
     'heading.5' => 'Une tarification claire.',
     'heading.6' => 'Nos tarifs sont connus à l\'avance, ce qui évite les mauvaises surprises à la fin du trajet.',
 
+    'incentives.1.title' => 'Tarification claire',
+    'incentives.1.text1' => 'Nos tarifs sont connus à l\'avance, ce qui évite les mauvaises surprises à la fin du trajet.',
+
+    'incentives.2.title' => 'Annulation gratuite',
+    'incentives.2.text1' => 'Vous pouvez annuler votre réservation gratuitement jusqu\'à 24 heures avant le départ.',
+
+    'incentives.3.title' => 'Payez à l\'arrivée',
+    'incentives.3.text1' => 'Nous vous offrons l\'option de payer plus tard.',
+
     'faq.heading' => 'Questions fréquentes.',
     'faq.subtitle' => 'Retrouvez ici les réponses à toutes vos interrogations.',
 
     'faq.1.title' => 'Comment puis-je réserver un trajet ?',
-    'faq.1.text1' => 'Vous pouvez réserver un trajet en remplissant le formulaire de réservation.',
-    'faq.1.text2' => 'Lors de la réservation, nous vous laissons le choix d\'effectuer le paiement en ligne ou de payer plus tard.',
+    'faq.1.text1' => 'Vous pouvez réserver un trajet en remplissant le formulaire de réservation en ligne.',
+    'faq.1.text2' => 'Une fois la réservation effectuée, il vous sera possible d\'effectuer le paiement en ligne à cet instant, ou de payer plus tard.',
 
     'faq.2.title' => 'Quels sont les modes de paiement acceptés ?',
-    'faq.2.text1' => 'Nous acceptons les paiements par carte bancaire, PayPal, Apple Pay, et Google Pay, uniquement pour les réservations effectuées depuis le formulaire de réservation.',
-    'faq.2.text2' => 'Vous pourrez régler le montant de votre course en espèces auprès du chauffeur à l\'arrivée à destination.',
+    'faq.2.text1' => 'Nous acceptons les paiements par carte bancaire, PayPal, Apple Pay, et Google Pay, uniquement pour les réservations effectuées depuis le formulaire de réservation en ligne.',
+    'faq.2.text2' => 'Vous pourrez régler le montant de votre course en espèces, auprès du chauffeur, à l\'arrivée à destination.',
 
     'faq.3.title' => 'Puis-je annuler ma réservation ?',
     'faq.3.text1' => 'Oui, vous pouvez annuler votre réservation gratuitement jusqu\'à 24 heures avant le départ. Au-delà, des frais peuvent s\'appliquer.',
@@ -29,6 +38,7 @@ return [
 
     'footer.link.home' => 'Accueil',
     'footer.link.book' => 'Réserver un trajet',
+    'footer.link.terms' => 'CGU',
     'footer.link.english' => 'English',
     'footer.link.french' => 'Français',
 ];

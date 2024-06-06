@@ -9,6 +9,15 @@ return [
     'heading.5' => 'Clear pricing.',
     'heading.6' => 'Our prices are known in advance, which avoids unpleasant surprises at the end of the trip.',
 
+    'incentives.1.title' => 'Clear pricing',
+    'incentives.1.text1' => 'Our prices are known in advance, which avoids unpleasant surprises at the end of the journey.',
+
+    'incentives.2.title' => 'Free cancellation',
+    'incentives.2.text1' => 'You can cancel your reservation free of charge up to 24 hours before departure.',
+
+    'incentives.3.title' => 'Pay on arrival',
+    'incentives.3.text1' => 'We offer you the option to pay later.',
+
     'faq.heading' => 'Frequently asked questions.',
     'faq.subtitle' => 'Find here the answers to all your questions.',
 
@@ -29,6 +38,7 @@ return [
 
     'footer.link.home' => 'Home',
     'footer.link.book' => 'Book a trip',
+    'footer.link.terms' => 'Terms',
     'footer.link.english' => 'English',
     'footer.link.french' => 'Français',
 ];

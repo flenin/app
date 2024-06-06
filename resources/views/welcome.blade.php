@@ -49,7 +49,7 @@
                         <p class="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-white">{{ __('lang.heading.2') }}</p>
                         <div class="mt-10 flex justify-center gap-x-6">
                             <a class="group inline-flex items-center justify-center rounded-full py-4 px-8 text-xl font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900 gap-1" variant="solid" color="slate" href="{{ route('welcome') }}">
-                                <span>-10€ avec le code PARIS24</span>
+                                <span>{{ __('booking.discount.paris24') }}</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                                 </svg>
@@ -84,8 +84,8 @@
                                 </div>
                             </div>
                             <div class="mt-3 lg:ml-0 lg:mt-6">
-                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">Tarification claire</h3>
-                                <p class="mt-2 text-base text-gray-500 tracking-tight">Nos tarifs sont connus à l'avance, ce qui évite les mauvaises surprises à la fin du trajet.</p>
+                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">{{ __('lang.incentives.1.title') }}</h3>
+                                <p class="mt-2 text-base text-gray-500 tracking-tight">{{ __('lang.incentives.1.text1') }}</p>
                             </div>
                         </div>
                         <div class="text-center lg:block lg:text-center">
@@ -97,8 +97,8 @@
                                 </div>
                             </div>
                             <div class="mt-3 lg:ml-0 lg:mt-6">
-                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">Annulation gratuite</h3>
-                                <p class="mt-2 text-base text-gray-500 tracking-tight">Vous pouvez annuler votre réservation gratuitement jusqu'à 24 heures avant le départ.</p>
+                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">{{ __('lang.incentives.2.title') }}</h3>
+                                <p class="mt-2 text-base text-gray-500 tracking-tight">{{ __('lang.incentives.2.text1') }}</p>
                             </div>
                         </div>
                         <div class="text-center lg:block lg:text-center">
@@ -110,8 +110,8 @@
                                 </div>
                             </div>
                             <div class="mt-3 lg:ml-0 lg:mt-6">
-                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">Payez à l'arrivée</h3>
-                                <p class="mt-2 text-base text-gray-500 tracking-tight">Nous vous offrons l'option de payer plus tard.</p>
+                                <h3 class="text-xl font-medium text-gray-900 tracking-tight font-display">{{ __('lang.incentives.3.title') }}</h3>
+                                <p class="mt-2 text-base text-gray-500 tracking-tight">{{ __('lang.incentives.3.text1') }}</p>
                             </div>
                         </div>
                     </div>
@@ -177,19 +177,12 @@
                         <div class="-my-1 flex justify-center gap-x-6 flex-col md:flex-row md:text-center">
                             <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="/">{{ __('lang.footer.link.home') }}</a>
                             <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('welcome') }}">{{ __('lang.footer.link.book') }}</a>
+                            <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('terms') }}">{{ __('lang.footer.link.terms') }}</a>
                             @if (request()->session()->get('locale') == 'fr')
                                 <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="/en">{{ __('lang.footer.link.english') }}</a>
                             @else
                                 <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="/fr">{{ __('lang.footer.link.french') }}</a>
                             @endif
-                        </div>
-                    </nav>
-                    <nav class="mt-10 text-sm" aria-label="quick links">
-                        <div class="-my-1 flex justify-center gap-x-6 flex-col md:flex-row md:text-center">
-                            <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('welcome') }}">Transferts Paris-Charles de Gaulle (CDG)</a>
-                            <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('welcome') }}">Transferts Paris-Orly (ORY)</a>
-                            <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('welcome') }}">Aéroport vers Disneyland Paris</a>
-                            <a class="inline-block rounded-lg px-2 py-1 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-900" href="{{ route('welcome') }}">Aéroport vers Paris</a>
                         </div>
                     </nav>
                 </div>

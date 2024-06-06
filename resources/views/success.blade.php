@@ -1,13 +1,13 @@
 @extends('layout')
 
 @section('title')
-    Paiement validé.
+    {{ __('booking.payment.validated.title') }}
 @endsection
 
 @section('text1')
-    Nous avons le plaisir de vous informer que votre paiement a été validé avec succès.
+    {{ __('booking.payment.validated.text1') }}
 @endsection
 
 @section('text2')
-    Notre service clientèle vous contactera prochainement pour organiser votre trajet.
+    {{ __('booking.payment.validated.text2') }}
 @endsection

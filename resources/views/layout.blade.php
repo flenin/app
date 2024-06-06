@@ -23,7 +23,7 @@
                     <p class="mt-6 text-lg leading-8 text-gray-600">@yield('text1')</p>
                     <p class="mt-2 text-lg leading-8 text-gray-600">@yield('text2')</p>
                     <div class="mt-10 flex justify-center gap-x-6">
-                        <a class="group inline-flex items-center justify-center rounded-full py-4 px-8 text-xl font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900 gap-1" variant="solid" color="slate" href="{{ route('welcome') }}">Retour à la page d'accueil</a>
+                        <a class="group inline-flex items-center justify-center rounded-full py-4 px-8 text-xl font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900 gap-1" variant="solid" color="slate" href="{{ route('welcome') }}">{{ __('booking.back.to.home') }}</a>
                     </div>
                 </div>
             </div>

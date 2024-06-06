@@ -61,12 +61,12 @@ export default function Booking(props) {
         };
 
         const options = {
-            bounds: {
-                north: center.lat + 1,
-                south: center.lat - 1,
-                east: center.lng + 1,
-                west: center.lng - 1,
-            },
+            // bounds: {
+            //     north: center.lat + 3,
+            //     south: center.lat - 3,
+            //     east: center.lng + 3,
+            //     west: center.lng - 3,
+            // },
             // strictBounds: true,
             componentRestrictions: {
                 country: 'fr',
@@ -295,7 +295,7 @@ export default function Booking(props) {
                     )}
                     {currentStep === 1 ? (
                         <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.price.title']}</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 {validated.data && validated.data.location ? (
                                     <>
@@ -314,15 +314,15 @@ export default function Booking(props) {
                                 {validated.data && validated.data.amount ? (
                                     <>
                                         <div className="col-span-full">
-                                            <dl className="mt-10 text-sm font-medium text-gray-500 space-y-6">
+                                            <dl className="mt-5 text-sm font-medium text-gray-500 space-y-6">
                                                 <div className="flex justify-between">
-                                                    <dt>Sous-total</dt>
+                                                    <dt>{trans['subtotal']}</dt>
                                                     <dd className="text-gray-900">{validated.data.amount}</dd>
                                                 </div>
                                                 {validated.data.voucher ? (
                                                     <>
                                                         <div className="flex justify-between">
-                                                            <dt className="flex">Code promo<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
+                                                            <dt className="flex">{trans['voucher']}<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
                                                             <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
                                                         </div>
                                                     </>
@@ -330,7 +330,7 @@ export default function Booking(props) {
                                                     <></>
                                                 )}
                                                 <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-                                                    <dt>Total</dt>
+                                                    <dt>{trans['total']}</dt>
                                                     <dd>{validated.data.amountWithVoucher}</dd>
                                                 </div>
                                             </dl>
@@ -346,7 +346,7 @@ export default function Booking(props) {
                     )}
                     {currentStep === 2 ? (
                         <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.date.title']}</h2>
                             <div>
                                 <Calendar
                                     value={booking.from_date}
@@ -364,7 +364,7 @@ export default function Booking(props) {
                     )}
                     {currentStep === 3 ? (
                         <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.contact.title']}</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['time']}</label>
@@ -509,15 +509,15 @@ export default function Booking(props) {
                                     color="white"
                                     target="_blank"
                                     rel="noreferrer"
-                                >Payer maintenant</a>
+                                >{trans['pay.now']}</a>
                             </div>
                             <div>
                                 <a
                                     href="/"
-                                    className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-slate-900 active:text-slate-600 focus-visible:outline-white w-full"
+                                    className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
                                     variant="solid"
                                     color="white"
-                                >Retour à la page d'accueil</a>
+                                >{trans['pay.later']}</a>
                             </div>
                         </>
                     ) : (
@@ -532,7 +532,7 @@ export default function Booking(props) {
                                         className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
                                         type="submit"
                                         variant="solid"
-                                        color="blue"
+                                        color="white"
                                     >
                                         <span>
                                             {trans['step.price']}
@@ -572,7 +572,7 @@ export default function Booking(props) {
                                 <div>
                                     <a
                                         href=""
-                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-white text-slate-900 active:text-slate-600 focus-visible:outline-white w-full"
+                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
                                         variant="solid"
                                         color="white"
                                         onClick={goToPreviousStep}

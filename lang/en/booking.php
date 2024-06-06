@@ -2,10 +2,11 @@
 
 return [
     'booking.fill.title' => 'Book a trip',
-    'booking.fill.description' => 'Fill the form below.',
+    'booking.price.title' => 'Estimated journey price',
+    'booking.date.title' => 'Travel date',
+    'booking.contact.title' => 'Journey details',
     'booking.checkout.title' => 'Trip summary',
-    'booking.checkout.description' => 'Check your data.',
-    'booking.confirmed.title' => 'Confirmed reservation',
+    'booking.confirmed.title' => 'Reservation made',
     'booking.confirmed.description' => 'You will be contacted by our customer service to plan your trip.',
     'back.to.home' => 'Back to home page',
     'select' => 'Choose',
@@ -25,4 +26,17 @@ return [
     'booking.confirm' => 'Confirm my booking',
     'book' => 'Book',
     'enter.location' => 'Enter a location',
+    'subtotal' => 'Subtotal',
+    'total' => 'Total',
+    'pay.now' => 'Pay now',
+    'pay.later' => 'Pay later',
+    'discount.paris24' => '-10€ with discount code PARIS24',
+
+    'payment.cancelled.title' => 'Payment cancelled.',
+    'payment.cancelled.text1' => 'We confirm that your payment has been successfully canceled. No amount has been debited from your account.',
+    'payment.cancelled.text2' => 'If you have any additional questions or need assistance, please do not hesitate to contact our customer service.',
+
+    'payment.validated.title' => 'Payment validated.',
+    'payment.validated.text1' => 'We are pleased to inform you that your payment has been successfully validated.',
+    'payment.validated.text2' => 'Our customer service will contact you shortly to organize your trip.',
 ];
