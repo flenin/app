@@ -27,6 +27,7 @@ class TripResource extends JsonResource
             'name' => $this->whenHas('name'),
             'phone' => $this->whenHas('phone'),
             'voucher' => new VoucherResource($this->whenLoaded('voucher')),
+            'pay.now' => ($this->amount ?? 0) >= 50 && $this->from_date != null && $this->from_date->format('Y-m-d') > now()->format('Y-m-d'),
         ];
     }
 }

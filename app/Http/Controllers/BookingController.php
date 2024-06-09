@@ -94,21 +94,27 @@ class BookingController extends Controller
                         || (($location->distance / 1000) > 300)
                     ) {
                         throw ValidationException::withMessages([
-                            'from_location' => 'Impossible deffectuer cette course 1',
+                            'from_location' => 'Please contact us',
                         ]);
                     }
 
-                    $trip->amount = ceil($location->distance / 1000 * env('COST_PER_KILOMETER'));
+                    $trip->amount = ceil(ceil($location->distance) / 1000 * env('COST_PER_KILOMETER'));
 
                     if ($trip->amountWithVoucher < 10) {
                         throw ValidationException::withMessages([
-                            'from_location' => 'Impossible deffectuer cette course 2',
+                            'from_location' => 'Please contact us',
                         ]);
                     }
 
                     if (($validated['adults'] + $validated['children']) > 4) {
                         $trip->amount += 20;
                     }
+
+                    if ($location->duration >= (35 * 60)) {
+                        $trip->amount += 20;
+                    }
+
+                    $trip->amount += 10;
 
                     break;
             }
@@ -124,10 +130,11 @@ class BookingController extends Controller
         } while (DB::table('trips')->where('url', $url)->exists());
 
         $trip->url = $url;
+        $trip->status = 0;
 
         $trip->save();
 
-        Mobile::notify("New trip {$url}");
+        Mobile::notify("Nouvelle réservation {$url} : trajet le {$trip->from_date->format('d/m/Y')} à {$trip->from_time->format('H:i')}. {$trip->location->from_address} -> {$trip->location->to_address}");
 
         $request->session()->forget('tripId');
 
@@ -171,7 +178,7 @@ class BookingController extends Controller
 
             $trip->save();
 
-            Mobile::notify("Paid {$trip->url}");
+            Mobile::notify("✅ Trajet {$trip->url} payé");
 
             return view('success');
         } catch (Error $e) {

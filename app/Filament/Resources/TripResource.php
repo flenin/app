@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TimePicker;
@@ -38,62 +39,58 @@ class TripResource extends Resource
                 Grid::make(1)
                     ->schema([
                         Section::make([
-                            Select::make('from_location_id')
-                                ->options(Location::get()->pluck('name', 'id'))
-                                ->required()
-                                ->exists(
-                                    table: Location::class,
-                                    column: 'id',
-                                ),
-                            Select::make('to_location_id')
-                                ->options(Location::get()->pluck('name', 'id'))
-                                ->required()
-                                ->exists(
-                                    table: Location::class,
-                                    column: 'id',
-                                )
-                                ->different('from_location_id'),
+                            Placeholder::make('url')
+                                ->content(fn (Trip $record): ?string => $record->url),
+                            Placeholder::make('amount')
+                                ->content(fn (Trip $record): ?string => $record->amount != null ? $record->amount.' €' : null),
+                            Placeholder::make('Lien de paiement Stripe')
+                                ->content(fn (Trip $record): ?string => $record->url != null ? route('booking.stripe', ['trip' => $record->url]) : null),
                         ])->columns(2),
                         Section::make([
-                            DatePicker::make('from_date')
-                                ->displayFormat('d/m/Y')
-                                ->native(false)
-                                ->format('Y-m-d'),
-                            TimePicker::make('from_time')
-                                ->seconds(false)
-                                ->native(false)
-                                ->format('H:i'),
+                            Placeholder::make('from_date')
+                                ->content(fn (Trip $record): ?string => optional($record->from_date)->format('d/m/Y')),
+                            Placeholder::make('from_time')
+                                ->content(fn (Trip $record): ?string => optional($record->from_time)->format('H:i')),
+                            Placeholder::make('location.from_address')
+                                ->content(fn (Trip $record): ?string => optional($record->location)->from_address),
+                            Placeholder::make('location.to_address')
+                                ->content(fn (Trip $record): ?string => optional($record->location)->to_address),
+                            Placeholder::make('location.distance')
+                                ->content(fn (Trip $record): ?string => $record->location != null ? ceil($record->location->distance / 1000).' km' : null),
+                            Placeholder::make('location.duration')
+                                ->content(fn (Trip $record): ?string => $record->location != null ? ceil($record->location->duration / 60).' min' : null),
                         ])->columns(2),
                         Section::make([
-                            TextInput::make('adults')
-                                ->numeric()
-                                ->default(0),
-                            TextInput::make('children')
-                                ->numeric()
-                                ->default(0),
-                            TextInput::make('luggages')
-                                ->numeric()
-                                ->default(0),
-                        ])->columns(3),
-                        TextInput::make('amount')
-                            ->postfix('€')
-                            ->numeric(),
-                        TextInput::make('name'),
-                        TextInput::make('phone'),
-                        Toggle::make('paid'),
-                        Textarea::make('notes'),
-                        Select::make('voucher_id')
-                            ->options(Voucher::get()->pluck('code', 'id'))
-                            ->exists(
-                                table: Voucher::class,
-                                column: 'id',
-                            ),
-                        Select::make('status')
-                            ->options([
-                                1 => 'Accepté',
-                                2 => 'Annulé',
-                                0 => 'En cours',
-                            ]),
+                            Placeholder::make('name')
+                                ->content(fn (Trip $record): ?string => $record->name),
+                            Placeholder::make('phone')
+                                ->content(fn (Trip $record): ?string => $record->phone),
+                        ])->columns(2),
+                        Section::make([
+                            Placeholder::make('adults')
+                                ->content(fn (Trip $record): ?string => $record->adults),
+                            Placeholder::make('children')
+                                ->content(fn (Trip $record): ?string => $record->children),
+                            Placeholder::make('luggages')
+                                ->content(fn (Trip $record): ?string => $record->luggages),
+                        ])->columns(2),
+                        Section::make([
+                            Placeholder::make('voucher.code')
+                                ->content(fn (Trip $record): ?string => optional($record->voucher)->code),
+                            Placeholder::make('voucher.amount')
+                                ->label('Réduction appliquée (€)')
+                                ->content(fn (Trip $record): ?string => optional($record->voucher)->amount),
+                        ])->columns(2),
+                        Section::make([
+                            Toggle::make('paid'),
+                            Select::make('status')
+                                ->options([
+                                    0 => 'En cours',
+                                    1 => 'Accepté',
+                                    2 => 'Annulé',
+                                    3 => 'Terminé',
+                                ]),
+                        ])->columns(2),
                     ]),
             ]);
     }
@@ -102,43 +99,44 @@ class TripResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('url'),
                 TextColumn::make('status')
                     ->formatStateUsing(function ($state) {
                         return match ($state) {
+                            0 => 'En cours',
                             1 => 'Accepté',
                             2 => 'Annulé',
-                            default => 'En cours',
+                            3 => 'Terminé',
                         };
                     })
                     ->badge()
                     ->color(function ($state) {
                         return match ($state) {
+                            0 => 'warning',
                             1 => 'success',
                             2 => 'danger',
-                            default => 'warning',
+                            3 => 'success',
                         };
                     }),
                 IconColumn::make('paid')
-                    ->boolean(),
+                    ->boolean()
+                    ->default(false),
                 TextColumn::make('from_date')
                     ->date('d/m/Y'),
                 TextColumn::make('from_time')
                     ->dateTime('H:i'),
                 TextColumn::make('name'),
                 TextColumn::make('phone'),
-                TextColumn::make('from_location.name'),
-                TextColumn::make('to_location.name'),
+                TextColumn::make('location.from_address')
+                    ->label('Départ'),
+                TextColumn::make('location.to_address')
+                    ->label('Arrivée'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
@@ -153,18 +151,17 @@ class TripResource extends Resource
     {
         return [
             'index' => Pages\ListTrips::route('/'),
-            'create' => Pages\CreateTrip::route('/create'),
             'edit' => Pages\EditTrip::route('/{record}/edit'),
         ];
     }
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('status', 0)->count();
+        return static::getModel()::where('status', 0)->orWhere('status', 1)->count();
     }
     
     public static function getNavigationBadgeColor(): ?string
     {
-        return 'warning';
+        return 'danger';
     }
 }

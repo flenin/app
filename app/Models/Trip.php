@@ -27,6 +27,8 @@ class Trip extends Model
         'luggages',
         'name',
         'phone',
+        'paid',
+        'status',
     ];
 
     public function location(): BelongsTo
