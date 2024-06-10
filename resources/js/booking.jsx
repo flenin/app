@@ -450,6 +450,22 @@ export default function Booking(props) {
                             <h2 className="text-lg font-semibold text-gray-900">{trans['booking.checkout.title']}</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div className="col-span-full">
+                                    <button
+                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
+                                        type="submit"
+                                        variant="solid"
+                                        color="blue"
+                                        ref={submit}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 animate-spin hidden">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                        </svg>
+                                        <span>
+                                            {trans['booking.confirm']}
+                                        </span>
+                                    </button>
+                                </div>
+                                <div className="col-span-full">
                                     <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from']}</label>
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.from_address}</span>
                                 </div>

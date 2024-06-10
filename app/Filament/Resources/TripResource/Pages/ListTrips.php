@@ -21,13 +21,13 @@ class ListTrips extends ListRecords
     {
         return [
             'Réservations en cours' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 0)->orWhere('status', 1)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 0)->orWhere('status', 1)->orderByDesc('id')),
             'Annulées' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 2)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 2)->orderByDesc('id')),
             'Terminées' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 3)),
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('status', 3)->orderByDesc('id')),
             'Formulaires non terminés' => Tab::make()
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereNull('status')),
+                ->modifyQueryUsing(fn (Builder $query) => $query->whereNull('status')->orderByDesc('id')),
         ];
     }
 }

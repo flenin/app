@@ -100,6 +100,11 @@ class TripResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('url'),
+                TextColumn::make('created_at')
+                    ->formatStateUsing(function ($state) {
+                        return $state->format('d/m/Y H:i');
+                    })
+                    ->sortable(),
                 TextColumn::make('status')
                     ->formatStateUsing(function ($state) {
                         return match ($state) {
@@ -122,8 +127,11 @@ class TripResource extends Resource
                     ->boolean()
                     ->default(false),
                 TextColumn::make('from_date')
-                    ->date('d/m/Y'),
+                    ->label('Date du trajet')
+                    ->date('d/m/Y')
+                    ->sortable(),
                 TextColumn::make('from_time')
+                    ->label('Heure du trajet')
                     ->dateTime('H:i'),
                 TextColumn::make('name'),
                 TextColumn::make('phone'),
