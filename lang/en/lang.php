@@ -2,7 +2,7 @@
 
 return [
     'whatsapp' => 'Contact us on WhatsApp',
-    'heading.1' => 'Your personal driver in Paris.',
+    'heading.1' => 'Your taxi driver in Paris.',
     'heading.2' => 'Travel with complete peace of mind by planning your next trips now.',
     'heading.3' => 'We are listening to you.',
     'heading.4' => 'Whether you have questions, specific needs or simply want to chat, our advisors are there to listen attentively and support you every step of the way to offer you a tailor-made experience.',
