@@ -106,13 +106,13 @@ class BookingController extends Controller
                         ]);
                     }
 
-                    if (($validated['adults'] + $validated['children']) > 4) {
-                        $trip->amount += 20;
-                    }
+                    // if (($validated['adults'] + $validated['children']) > 4) {
+                    //     $trip->amount += 20;
+                    // }
 
-                    if ($location->duration >= (35 * 60)) {
-                        $trip->amount += 20;
-                    }
+                    // if ($location->duration >= (35 * 60)) {
+                    //     $trip->amount += 20;
+                    // }
 
                     $trip->amount += 10;
 

@@ -9,7 +9,9 @@ export default function Booking(props) {
 
     const [times, setTimes] = useState(JSON.parse(props.times));
     const [errors, setErrors] = useState({});
-    const [booking, setBooking] = useState({});
+    const [booking, setBooking] = useState({
+        voucher: 'PARIS24',
+    });
     const [validated, setValidated] = useState({});
     const submit = useRef();
 
