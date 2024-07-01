@@ -21,8 +21,6 @@ return [
             'required_if' => 'Sélectionnez le nombre d\'adultes',
             'integer' => 'Sélectionnez le nombre d\'adultes',
             'between' => 'Sélectionnez le nombre d\'adultes',
-            'min' => 'Sélectionnez le nombre d\'adultes',
-            'max' => 'Sélectionnez jusqu\'à 7 personnes maximum',
         ],
         'children' => [
             'required_if' => 'Sélectionnez le nombre d\'enfants',
@@ -45,6 +43,10 @@ return [
         'voucher' => [
             'present_if' => 'Renseignez le code promo',
             'exists' => 'Le code promo n\'est pas valide',
+        ],
+        'custom_amount' => [
+            'integer' => 'Saisissez un montant entre 0 et 1000',
+            'between' => 'Saisissez un montant entre 0 et 1000',
         ],
     ],
 ];

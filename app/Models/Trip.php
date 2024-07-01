@@ -29,6 +29,7 @@ class Trip extends Model
         'phone',
         'paid',
         'status',
+        'custom_amount',
     ];
 
     public function location(): BelongsTo

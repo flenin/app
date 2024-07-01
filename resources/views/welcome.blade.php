@@ -37,7 +37,7 @@
         <main>
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16 pt-20 lg:pt-32">
                 <div class="grid gap-4 grid-cols-1 lg:grid-cols-3">
-                    <div class="order-2 lg:order-1 bg-white rounded-xl shadow-xl p-6">
+                    <div id="booking-form" class="order-2 lg:order-1 bg-white rounded-xl shadow-xl p-6">
                         <div
                             id="root"
                             data-trans="{{ $trans }}"

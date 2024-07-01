@@ -9,9 +9,7 @@ export default function Booking(props) {
 
     const [times, setTimes] = useState(JSON.parse(props.times));
     const [errors, setErrors] = useState({});
-    const [booking, setBooking] = useState({
-        voucher: 'PARIS24',
-    });
+    const [booking, setBooking] = useState({});
     const [validated, setValidated] = useState({});
     const submit = useRef();
 
@@ -41,6 +39,8 @@ export default function Booking(props) {
 
         setErrors({});
         setCurrentStep(currentStep - 1);
+
+        document.querySelector('#booking-form').scrollIntoView();
     }
 
 
@@ -103,7 +103,7 @@ export default function Booking(props) {
     }, []);
 
     useEffect(() => {
-        initMap();
+        {currentStep === 0 && initMap()};
     }, [currentStep]);
 
 
@@ -153,7 +153,7 @@ export default function Booking(props) {
                 setErrors(error.response.data.errors);
             })
             .finally(() => {
-                window.scrollTo(0, 0);
+                document.querySelector('#booking-form').scrollIntoView();
 
                 button.querySelector('span').classList.remove('hidden');
                 button.querySelector('svg').classList.add('hidden');
@@ -192,17 +192,17 @@ export default function Booking(props) {
                 <div className="grid gap-x-6 gap-y-8">
                     {currentStep === 0 ? (
                         <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.fill.title']} – {trans['step']} 1/5</h2>
                             {/* <p className="mt-2 text-sm text-gray-700 mb-10">{trans['booking.fill.description']}</p> */}
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div className="col-span-full">
-                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['from']}</label>
+                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['from.location']}</label>
                                     <input
                                         type="text"
                                         name="from_location_autocomplete_input"
                                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.from_location_autocomplete_input}
-                                        placeholder={trans['enter.location']}
+                                        placeholder={``}
                                         onChange={handleChange}
                                         ref={from_location_autocomplete_input}
                                     />
@@ -213,13 +213,13 @@ export default function Booking(props) {
                                     )}
                                 </div>
                                 <div className="col-span-full">
-                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['to']}</label>
+                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['to.location']}</label>
                                     <input
                                         type="text"
                                         name="to_location_autocomplete_input"
                                         className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
                                         value={booking.to_location_autocomplete_input}
-                                        placeholder={trans['enter.location']}
+                                        placeholder={``}
                                         onChange={handleChange}
                                         ref={to_location_autocomplete_input}
                                     />
@@ -229,6 +229,153 @@ export default function Booking(props) {
                                         <></>
                                     )}
                                 </div>
+                                <div className="col-span-full">
+                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['voucher']}</label>
+                                    <input
+                                        type="text"
+                                        name="voucher"
+                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                        value={booking.voucher}
+                                        onChange={handleChange}
+                                    />
+                                    {errors.voucher ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.voucher}</p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {currentStep === 1 ? (
+                        <>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.price.title']} – {trans['step']} 2/5</h2>
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                                {validated.data && validated.data.location ? (
+                                    <>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from.location']}</label>
+                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.from_address}</span>
+                                        </div>
+                                        <div className="col-span-full border-b border-gray-200 pb-6">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['to.location']}</label>
+                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.to_address}</span>
+                                        </div>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['estimated.price']}</label>
+                                            <div className="flex w-full appearance-none text-gray-900 sm:text-sm">
+                                                <span>{validated.data.amountWithVoucher}</span>
+                                                {validated.data.voucher ? (
+                                                    <>
+                                                        <span>*&nbsp;{trans['instead.of']}&nbsp;</span>
+                                                        <span className="line-through">{validated.data.amount}</span>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                            </div>
+                                            {validated.data.voucher ? (
+                                                <>
+                                                    <span className="mt-3 block w-full appearance-none text-gray-500 sm:text-sm">*{trans['voucher']} {validated.data.voucher.code} {trans['applied']} (-{validated.data.voucher.amount})</span>
+                                                </>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </div>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-700">{trans['custom.amount']}</label>
+                                            <input
+                                                type="text"
+                                                name="custom_amount"
+                                                className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
+                                                value={booking.custom_amount}
+                                                onChange={handleChange}
+                                            />
+                                            {errors.custom_amount ? (
+                                                <p className="mt-2 text-sm text-red-600">{errors.custom_amount}</p>
+                                            ) : (
+                                                <></>
+                                            )}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {/* {validated.data && validated.data.amount ? (
+                                    <>
+                                        <div className="col-span-full">
+                                            <dl className="mt-5 text-sm font-medium text-gray-500 space-y-6">
+                                                <div className="flex justify-between">
+                                                    <dt>{trans['subtotal']}</dt>
+                                                    <dd className="text-gray-900">{validated.data.amount}</dd>
+                                                </div>
+                                                {validated.data.voucher ? (
+                                                    <>
+                                                        <div className="flex justify-between">
+                                                            <dt className="flex">{trans['voucher']}<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
+                                                            <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <></>
+                                                )}
+                                                <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
+                                                    <dt>{trans['total']}</dt>
+                                                    <dd>{validated.data.amountWithVoucher}</dd>
+                                                </div>
+                                            </dl>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <></>
+                                )} */}
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {currentStep === 2 ? (
+                        <>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.date.title']} – {trans['step']} 3/5</h2>
+                            <div>
+                                <Calendar
+                                    value={booking.from_date}
+                                    onChange={handleChange}
+                                />
+                                {errors.from_date ? (
+                                    <p className="mt-2 text-sm text-red-600">{errors.from_date}</p>
+                                ) : (
+                                    <></>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+                    {currentStep === 3 ? (
+                        <>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.contact.title']} – {trans['step']} 4/5</h2>
+                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
+                                <div>
+                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['time']}</label>
+                                    <select
+                                        name="from_time"
+                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
+                                        value={booking.from_time}
+                                        onChange={handleChange}
+                                    >
+                                        <option disabled selected>{trans['select']}</option>
+                                        {times.map((v, i) => <option key={i}>{v}</option>)}
+                                    </select>
+                                    {errors.from_time ? (
+                                        <p className="mt-2 text-sm text-red-600">{errors.from_time}</p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+                                <div></div>
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['adults']}</label>
                                     <select
@@ -275,116 +422,6 @@ export default function Booking(props) {
                                         <></>
                                     )}
                                 </div>
-                                <div className="col-span-full">
-                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['voucher']}</label>
-                                    <input
-                                        type="text"
-                                        name="voucher"
-                                        className="block w-full appearance-none rounded border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm"
-                                        value={booking.voucher}
-                                        onChange={handleChange}
-                                    />
-                                    {errors.voucher ? (
-                                        <p className="mt-2 text-sm text-red-600">{errors.voucher}</p>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    {currentStep === 1 ? (
-                        <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.price.title']}</h2>
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                                {validated.data && validated.data.location ? (
-                                    <>
-                                        <div className="col-span-full">
-                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from']}</label>
-                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.from_address}</span>
-                                        </div>
-                                        <div className="col-span-full">
-                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['to']}</label>
-                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.to_address}</span>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <></>
-                                )}
-                                {validated.data && validated.data.amount ? (
-                                    <>
-                                        <div className="col-span-full">
-                                            <dl className="mt-5 text-sm font-medium text-gray-500 space-y-6">
-                                                <div className="flex justify-between">
-                                                    <dt>{trans['subtotal']}</dt>
-                                                    <dd className="text-gray-900">{validated.data.amount}</dd>
-                                                </div>
-                                                {validated.data.voucher ? (
-                                                    <>
-                                                        <div className="flex justify-between">
-                                                            <dt className="flex">{trans['voucher']}<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
-                                                            <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
-                                                        </div>
-                                                    </>
-                                                ) : (
-                                                    <></>
-                                                )}
-                                                <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
-                                                    <dt>{trans['total']}</dt>
-                                                    <dd>{validated.data.amountWithVoucher}</dd>
-                                                </div>
-                                            </dl>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    {currentStep === 2 ? (
-                        <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.date.title']}</h2>
-                            <div>
-                                <Calendar
-                                    value={booking.from_date}
-                                    onChange={handleChange}
-                                />
-                                {errors.from_date ? (
-                                    <p className="mt-2 text-sm text-red-600">{errors.from_date}</p>
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                    {currentStep === 3 ? (
-                        <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.contact.title']}</h2>
-                            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                                <div>
-                                    <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['time']}</label>
-                                    <select
-                                        name="from_time"
-                                        className="block w-full appearance-none rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 sm:text-sm pr-8"
-                                        value={booking.from_time}
-                                        onChange={handleChange}
-                                    >
-                                        <option disabled selected>{trans['select']}</option>
-                                        {times.map((v, i) => <option key={i}>{v}</option>)}
-                                    </select>
-                                    {errors.from_time ? (
-                                        <p className="mt-2 text-sm text-red-600">{errors.from_time}</p>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </div>
                                 <div>
                                     <label className="mb-3 block text-sm font-medium text-gray-700 text-nowrap">{trans['luggages']}</label>
                                     <select
@@ -401,9 +438,6 @@ export default function Booking(props) {
                                         <option>5</option>
                                         <option>6</option>
                                         <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
                                     </select>
                                     {errors.luggages ? (
                                         <p className="mt-2 text-sm text-red-600">{errors.luggages}</p>
@@ -449,7 +483,7 @@ export default function Booking(props) {
                     )}
                     {currentStep === 4 ? (
                         <>
-                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.checkout.title']}</h2>
+                            <h2 className="text-lg font-semibold text-gray-900">{trans['booking.checkout.title']} – {trans['step']} 5/5</h2>
                             <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                                 <div className="col-span-full">
                                     <button
@@ -457,7 +491,6 @@ export default function Booking(props) {
                                         type="submit"
                                         variant="solid"
                                         color="blue"
-                                        ref={submit}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 animate-spin hidden">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -467,12 +500,20 @@ export default function Booking(props) {
                                         </span>
                                     </button>
                                 </div>
-                                <div className="col-span-full">
-                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from']}</label>
+                                <div>
+                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['date']}</label>
+                                    <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.from_date.format}</span>
+                                </div>
+                                <div>
+                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['time']}</label>
+                                    <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.from_time.format}</span>
+                                </div>
+                                <div className="col-span-full border-t border-gray-200 pt-6">
+                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['from.location']}</label>
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.from_address}</span>
                                 </div>
-                                <div className="col-span-full">
-                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['to']}</label>
+                                <div className="col-span-full border-b border-gray-200 pb-6">
+                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['to.location']}</label>
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.location.to_address}</span>
                                 </div>
                                 <div>
@@ -488,15 +529,7 @@ export default function Booking(props) {
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.luggages}</span>
                                 </div>
                                 <div></div>
-                                <div>
-                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['date']}</label>
-                                    <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.from_date.format}</span>
-                                </div>
-                                <div>
-                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['time']}</label>
-                                    <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.from_time.format}</span>
-                                </div>
-                                <div className="col-span-full">
+                                <div className="col-span-full border-t border-gray-200 pt-6">
                                     <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['firstname']}</label>
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.name}</span>
                                 </div>
@@ -504,6 +537,59 @@ export default function Booking(props) {
                                     <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['mobile']}</label>
                                     <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.phone}</span>
                                 </div>
+                                <div className="col-span-full border-t border-gray-200 pt-6">
+                                    <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['estimated.price']}</label>
+                                    <div className="flex w-full appearance-none text-gray-900 sm:text-sm">
+                                        <span>{validated.data.amountWithVoucher}</span>
+                                        {validated.data.voucher ? (
+                                            <>
+                                                <span>*&nbsp;{trans['instead.of']}&nbsp;</span>
+                                                <span className="line-through">{validated.data.amount}</span>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
+                                    {validated.data.voucher ? (
+                                        <>
+                                            <span className="mt-3 block w-full appearance-none text-gray-500 sm:text-sm">*{trans['voucher']} {validated.data.voucher.code} {trans['applied']} (-{validated.data.voucher.amount})</span>
+                                        </>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+                                {validated.data.customAmount ? (
+                                    <>
+                                        <div className="col-span-full">
+                                            <label className="mb-3 block text-sm font-medium text-gray-500 text-nowrap">{trans['asked.price']}</label>
+                                            <span className="block w-full appearance-none text-gray-900 sm:text-sm">{validated.data.customAmount}</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
+                                {/* <div className="col-span-full">
+                                    <dl className="mt-5 text-sm font-medium text-gray-500 space-y-6">
+                                        <div className="flex justify-between">
+                                            <dt>{trans['subtotal']}</dt>
+                                            <dd className="text-gray-900">{validated.data.amount}</dd>
+                                        </div>
+                                        {validated.data.voucher ? (
+                                            <>
+                                                <div className="flex justify-between">
+                                                    <dt className="flex">{trans['voucher']}<span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs tracking-wide text-gray-600">{validated.data.voucher.code}</span></dt>
+                                                    <dd className="text-gray-900">-{validated.data.voucher.amount}</dd>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <div className="flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900">
+                                            <dt>{trans['total']}</dt>
+                                            <dd>{validated.data.amountWithVoucher}</dd>
+                                        </div>
+                                    </dl>
+                                </div> */}
                             </div>
                         </>
                     ) : (
@@ -519,28 +605,24 @@ export default function Booking(props) {
                                     <p>{trans['booking.confirmed.description']}</p>
                                 </div>
                             </div> */}
-                            {validated.data['pay.now'] ? (
-                                <div>
-                                    <a
-                                        href={validated.stripe_url}
-                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
-                                        variant="solid"
-                                        color="white"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                    >{trans['pay.now']}</a>
-                                </div>
-                            ) : (
-                                <></>
-                            )}
-                            <div>
+                            {/* <div>
+                                <a
+                                    href={validated.stripe_url}
+                                    className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
+                                    variant="solid"
+                                    color="white"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >{trans['pay.now']}</a>
+                            </div> */}
+                            {/* {<div>
                                 <a
                                     href="/"
                                     className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
                                     variant="solid"
                                     color="white"
                                 >{trans['pay.later']}</a>
-                            </div>
+                            </div>} */}
                         </>
                     ) : (
                         <></>
@@ -548,61 +630,59 @@ export default function Booking(props) {
 
                     {currentStep < 5 ?
                         <>
-                            {currentStep === 0 ?
+                            <div className="grid gap-y-8 mt-5">
+                                {currentStep === 0 ?
+                                    <div>
+                                        <button
+                                            className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
+                                            type="submit"
+                                            variant="solid"
+                                            color="white"
+                                        >
+                                            <span>
+                                                {trans['step.price']}
+                                            </span>
+                                        </button>
+                                    </div>
+                                :
+                                    <></>
+                                }
                                 <div>
                                     <button
-                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
+                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
                                         type="submit"
                                         variant="solid"
-                                        color="white"
+                                        color="blue"
+                                        ref={submit}
                                     >
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 animate-spin hidden">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                        </svg>
                                         <span>
-                                            {trans['step.price']}
+                                            {currentStep === 4 ? (
+                                                trans['booking.confirm']
+                                            ) : (
+                                                <>
+                                                    {trans['step.next']}
+                                                </>
+                                            )}
                                         </span>
                                     </button>
                                 </div>
-                            :
-                                <></>
-                            }
-                            <div>
-                                <button
-                                    className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-blue-600 text-white hover:text-slate-100 hover:bg-blue-500 active:bg-blue-800 active:text-blue-100 focus-visible:outline-blue-600 w-full gap-1"
-                                    type="submit"
-                                    variant="solid"
-                                    color="blue"
-                                    ref={submit}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 animate-spin hidden">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                                    </svg>
-                                    <span>
-                                        {currentStep === 4 ? (
-                                            trans['booking.confirm']
-                                        ) : (
-                                            <>
-                                                {currentStep === 0 ? (
-                                                    trans['book']
-                                                ) : (
-                                                    trans['step.next']
-                                                )}
-                                            </>
-                                        )}
-                                    </span>
-                                </button>
+                                {currentStep > 0 ?
+                                    <div>
+                                        <a
+                                            href=""
+                                            className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
+                                            variant="solid"
+                                            color="white"
+                                            onClick={goToPreviousStep}
+                                        >{trans['step.back']}</a>
+                                    </div>
+                                :
+                                    <></>
+                                }
                             </div>
-                            {currentStep > 0 ?
-                                <div>
-                                    <a
-                                        href=""
-                                        className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 bg-gray-50 text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus-visible:outline-blue-600 w-full gap-1"
-                                        variant="solid"
-                                        color="white"
-                                        onClick={goToPreviousStep}
-                                    >{trans['step.back']}</a>
-                                </div>
-                            :
-                                <></>
-                            }
                         </>
                     :
                         <></>

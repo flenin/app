@@ -189,8 +189,6 @@ return [
             'required_if' => 'Select the number of adults',
             'integer' => 'Select the number of adults',
             'between' => 'Select the number of adults',
-            'min' => 'Select the number of adults',
-            'max' => 'Select up to 7 people maximum',
         ],
         'children' => [
             'required_if' => 'Select the number of children',
@@ -213,6 +211,10 @@ return [
         'voucher' => [
             'present_if' => 'Enter the promo code',
             'exists' => 'The promo code is not valid',
+        ],
+        'custom_amount' => [
+            'integer' => 'Enter an amout between 0 and 1000',
+            'between' => 'Enter an amout between 0 and 1000',
         ],
     ],
 

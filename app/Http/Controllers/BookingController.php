@@ -91,29 +91,14 @@ class BookingController extends Controller
 
                     if (
                         empty($location)
-                        || (($location->distance / 1000) > 300)
+                        || (($location->distance / 1000) > 500)
                     ) {
                         throw ValidationException::withMessages([
-                            'from_location' => 'Please contact us',
+                            'from_location' => 'Please contact us on WhatsApp',
                         ]);
                     }
 
                     $trip->amount = ceil(ceil($location->distance) / 1000 * env('COST_PER_KILOMETER'));
-
-                    if ($trip->amountWithVoucher < 10) {
-                        throw ValidationException::withMessages([
-                            'from_location' => 'Please contact us',
-                        ]);
-                    }
-
-                    // if (($validated['adults'] + $validated['children']) > 4) {
-                    //     $trip->amount += 20;
-                    // }
-
-                    // if ($location->duration >= (35 * 60)) {
-                    //     $trip->amount += 20;
-                    // }
-
                     $trip->amount += 10;
 
                     break;
