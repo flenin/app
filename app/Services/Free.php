@@ -16,10 +16,12 @@ class Free implements MobileInterface
             'msg' => $message,
         ]);
 
-        Http::get('https://smsapi.free-mobile.fr/sendmsg', [
-            'user' => '44125057',
-            'pass' => 'YCSBr3Rpnk1YNs',
-            'msg' => $message,
-        ]);
+        if (env('APP_DEBUG') === false) {
+            Http::get('https://smsapi.free-mobile.fr/sendmsg', [
+                'user' => '44125057',
+                'pass' => 'YCSBr3Rpnk1YNs',
+                'msg' => $message,
+            ]);
+        }
     }
 }

@@ -213,8 +213,8 @@ return [
             'exists' => 'The promo code is not valid',
         ],
         'custom_amount' => [
-            'integer' => 'Enter an amout between 0 and 1000',
-            'between' => 'Enter an amout between 0 and 1000',
+            'integer' => 'Enter an amout between 1 and 1000',
+            'between' => 'Enter an amout between 1 and 1000',
         ],
     ],
 

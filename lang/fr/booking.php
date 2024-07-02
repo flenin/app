@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'booking.fill.title' => 'Réserver un trajet',
+    'booking.fill.title' => 'Réserver un trajet en 1 minute',
     'booking.price.title' => 'Estimation du prix du trajet',
     'booking.date.title' => 'Date du trajet',
     'booking.contact.title' => 'Détails du trajet',

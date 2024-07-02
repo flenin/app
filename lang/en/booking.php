@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'booking.fill.title' => 'Book a trip',
+    'booking.fill.title' => 'Book a trip in 1 minute',
     'booking.price.title' => 'Estimated journey price',
     'booking.date.title' => 'Travel date',
     'booking.contact.title' => 'Journey details',

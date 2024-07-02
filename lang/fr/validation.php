@@ -45,8 +45,8 @@ return [
             'exists' => 'Le code promo n\'est pas valide',
         ],
         'custom_amount' => [
-            'integer' => 'Saisissez un montant entre 0 et 1000',
-            'between' => 'Saisissez un montant entre 0 et 1000',
+            'integer' => 'Saisissez un montant entre 1 et 1000',
+            'between' => 'Saisissez un montant entre 1 et 1000',
         ],
     ],
 ];

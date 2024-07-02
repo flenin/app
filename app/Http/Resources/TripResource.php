@@ -27,7 +27,7 @@ class TripResource extends JsonResource
             'name' => $this->whenHas('name'),
             'phone' => $this->whenHas('phone'),
             'voucher' => new VoucherResource($this->whenLoaded('voucher')),
-            'customAmount' => Number::currency($this->custom_amount ?? 0, 'EUR', 'fr'),
+            'customAmount' => $this->when(!empty($this->custom_amount), Number::currency($this->custom_amount ?? 0, 'EUR', 'fr')),
         ];
     }
 }

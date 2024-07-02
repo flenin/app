@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use Illuminate\Support\Number;
 
 use App\Models\Trip;
 use App\Models\Voucher;
@@ -119,7 +120,14 @@ class BookingController extends Controller
 
         $trip->save();
 
-        Mobile::notify("Nouvelle réservation {$url} : trajet le {$trip->from_date->format('d/m/Y')} à {$trip->from_time->format('H:i')}. {$trip->location->from_address} -> {$trip->location->to_address}");
+        Mobile::notify("New trip \"{$url}\" :
+{$trip->from_date->format('d/m/Y')} at {$trip->from_time->format('H:i')}
+{$trip->name}
+{$trip->phone}
+".Number::currency($trip->amountWithVoucher, 'EUR', 'fr')."
+With discount code : ".($trip->voucher !== null ? 'yes' : 'no')."
+Negociated price : ".($trip->custom_amount !== null ? Number::currency($trip->custom_amount, 'EUR', 'fr') : 'no')."
+https://www.google.com/maps/dir/?api=1&origin=a&origin_place_id={$trip->location->from_place_id}&destination_place_id={$trip->location->to_place_id}&destination=a&travelmode=driving");
 
         $request->session()->forget('tripId');
 
@@ -163,7 +171,7 @@ class BookingController extends Controller
 
             $trip->save();
 
-            Mobile::notify("✅ Trajet {$trip->url} payé");
+            Mobile::notify("Trip \"{$trip->url}\" paid");
 
             return view('success');
         } catch (Error $e) {
